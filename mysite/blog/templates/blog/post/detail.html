@@ -1,0 +1,47 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ post.title }} - My Blog</title>
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+</head>
+<body>
+    <header>
+        <div class="container">
+            <h1><a href="{% url 'blog:post_list' %}">My Blog</a></h1>
+            <p class="tagline">Thoughts, stories and ideas</p>
+        </div>
+    </header>
+
+    <main class="container">
+        <article class="post-detail">
+            <header class="post-header">
+                <h2>{{ post.title }}</h2>
+                <div class="post-meta">
+                    <span class="author">By {{ post.author.username }}</span>
+                    <span class="date">Published on {{ post.publish|date:"F d, Y" }}</span>
+                    {% if post.updated != post.created %}
+                    <span class="updated">Updated {{ post.updated|date:"F d, Y" }}</span>
+                    {% endif %}
+                </div>
+            </header>
+
+            <div class="post-body">
+                {{ post.body|linebreaks }}
+            </div>
+
+            <footer class="post-footer">
+                <a href="{% url 'blog:post_list' %}" class="back-link">← Back to all posts</a>
+            </footer>
+        </article>
+    </main>
+
+    <footer>
+        <div class="container">
+            <p>&copy; 2024 My Blog. All rights reserved.</p>
+        </div>
+    </footer>
+</body>
+</html>
