@@ -1,35 +1,113 @@
 {% extends 'blog/base.html' %}
-{% block title %}
-  My Blog - Posts
-{% endblock %}
-{% block content %}
-  <header>
-    <div class="container">
-      <h1>My Blog</h1>
-      <p class="tagline">Thoughts, stories and ideas</p>
-    </div>
-  </header>
 
-  <main class="container">
-    <h2>Latest Posts</h2>
+{% block title %}
+  وبلاگ من - آخرین مطالب
+{% endblock %}
+
+{% block content %}
+  <!-- Hero Section -->
+  <div class="bg-gradient-to-br from-blue-600 to-purple-600 text-white py-20">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+      <h1 class="text-4xl md:text-5xl lg:text-6xl font-bold mb-4 animate-fade-in">به وبلاگ ما خوش آمدید</h1>
+      <p class="text-xl md:text-2xl text-blue-100 max-w-2xl mx-auto">افکار، داستان‌ها و ایده‌های جالب را با ما کشف کنید</p>
+    </div>
+  </div>
+
+  <!-- Posts Section -->
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+    <div class="flex items-center justify-between mb-8">
+      <h2 class="text-3xl font-bold text-gray-900">
+        <i class="fas fa-newspaper text-blue-600 ml-2"></i>
+        آخرین مطالب
+      </h2>
+
+      <!-- Search & Filter (Optional) -->
+      <div class="hidden md:flex items-center space-x-3 space-x-reverse">
+        <input type="text" placeholder="جستجو..." class="px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent" />
+        <button class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"><i class="fas fa-search"></i></button>
+      </div>
+    </div>
 
     {% if posts %}
-      <div class="posts-grid">
+      <!-- Posts Grid -->
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-8">
         {% for post in posts %}
-          <article class="post-card">
-            <h3><a href="{{ post.get_absolute_url }}">{{ post.title }}</a></h3>
-            <div class="post-meta">
-              <span class="author">By {{ post.author.username }}</span>
-              <span class="date">{{ post.publish|date:'F d, Y' }}</span>
+          <article class="bg-white rounded-xl shadow-md hover:shadow-xl transition-all duration-300 transform hover:-translate-y-2 overflow-hidden group">
+            <!-- Post Image Placeholder -->
+            <div class="h-48 bg-gradient-to-br from-blue-400 to-purple-500 relative overflow-hidden">
+              <div class="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-20 transition-all duration-300 flex items-center justify-center">
+                <i class="fas fa-image text-white text-6xl opacity-30"></i>
+              </div>
             </div>
-            <p class="post-excerpt">{{ post.body|truncatewords:30|linebreaks }}</p>
-            <a href="{{ post.get_absolute_url }}" class="read-more">Read more →</a>
+
+            <!-- Post Content -->
+            <div class="p-6">
+              <h3 class="text-xl font-bold mb-3 line-clamp-2"><a href="{{ post.get_absolute_url }}" class="text-gray-900 hover:text-blue-600 transition-colors">{{ post.title }}</a></h3>
+
+              <!-- Meta Information -->
+              <div class="flex items-center text-sm text-gray-500 mb-4 space-x-4 space-x-reverse">
+                <span class="flex items-center">
+                  <i class="fas fa-user ml-1 text-blue-600"></i>
+                  {{ post.author.username }}
+                </span>
+                <span class="flex items-center">
+                  <i class="fas fa-calendar ml-1 text-blue-600"></i>
+                  {{ post.publish|date:'Y/m/d' }}
+                </span>
+              </div>
+
+              <!-- Excerpt -->
+              <p class="text-gray-600 mb-4 line-clamp-3 leading-relaxed">{{ post.body|truncatewords:25|striptags }}</p>
+
+              <!-- Read More Button -->
+              <a href="{{ post.get_absolute_url }}" class="inline-flex items-center text-blue-600 hover:text-blue-700 font-medium group">
+                ادامه مطلب
+                <i class="fas fa-arrow-left mr-2 transform group-hover:-translate-x-1 transition-transform"></i>
+              </a>
+            </div>
+
+            <!-- Post Footer -->
+            <div class="px-6 py-3 bg-gray-50 border-t border-gray-100">
+              <div class="flex items-center justify-between text-sm text-gray-500">
+                <span class="flex items-center">
+                  <i class="fas fa-comments ml-1"></i>
+                  0 نظر
+                </span>
+                <span class="flex items-center">
+                  <i class="fas fa-eye ml-1"></i>
+                  0 بازدید
+                </span>
+              </div>
+            </div>
           </article>
         {% endfor %}
       </div>
+
+      <!-- Pagination -->
+      <div class="mt-12">
+        {% include 'pagination.html' with page=page_obj %}
+      </div>
     {% else %}
-      <p class="no-posts">No posts available yet.</p>
+      <!-- No Posts Message -->
+      <div class="text-center py-16">
+        <div class="inline-flex items-center justify-center w-24 h-24 rounded-full bg-gray-100 mb-6">
+          <i class="fas fa-inbox text-4xl text-gray-400"></i>
+        </div>
+        <h3 class="text-2xl font-semibold text-gray-700 mb-2">هنوز مطلبی منتشر نشده است</h3>
+        <p class="text-gray-500">به زودی مطالب جدید منتشر خواهد شد. لطفاً بعداً مراجعه کنید.</p>
+      </div>
     {% endif %}
-    {% include 'pagination.html' with page=page_obj %}
-  </main>
+  </div>
+
+  <!-- Newsletter Section (Optional) -->
+  <div class="bg-gradient-to-r from-blue-600 to-purple-600 py-16 mt-12">
+    <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+      <h2 class="text-3xl font-bold text-white mb-4">در خبرنامه ما عضو شوید</h2>
+      <p class="text-blue-100 mb-8 text-lg">آخرین مطالب را مستقیماً در ایمیل خود دریافت کنید</p>
+      <form class="flex flex-col sm:flex-row gap-3 max-w-md mx-auto">
+        <input type="email" placeholder="ایمیل خود را وارد کنید" class="flex-1 px-6 py-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-white" />
+        <button type="submit" class="px-8 py-3 bg-white text-blue-600 rounded-lg font-medium hover:bg-gray-100 transition-colors">عضویت</button>
+      </form>
+    </div>
+  </div>
 {% endblock %}

@@ -1,17 +1,174 @@
 {% extends 'blog/base.html' %}
+
 {% block title %}
-  Share "{{ post.title }}" by email
+  اشتراک‌گذاری "{{ post.title }}"
 {% endblock %}
+
 {% block content %}
-  <div class="share-container">
-    {% if sent %}
-      <p class="share-success">Your email has been sent successfully.</p>
-    {% else %}
-      <form method="post" class="share-form">
-        {% csrf_token %}
-        {{ form.as_p }}
-        <button type="submit" class="share-button">Send Email</button>
-      </form>
-    {% endif %}
+  <div class="min-h-screen flex items-center justify-center px-4 py-12">
+    <div class="max-w-2xl w-full">
+      <!-- Header -->
+      <div class="text-center mb-8">
+        <div class="inline-flex items-center justify-center w-16 h-16 rounded-full bg-gradient-to-br from-blue-500 to-purple-600 mb-4">
+          <i class="fas fa-share-alt text-2xl text-white"></i>
+        </div>
+        <h1 class="text-3xl font-bold text-gray-900 mb-2">اشتراک‌گذاری مطلب</h1>
+        <p class="text-gray-600">این مطلب را با دوستان خود به اشتراک بگذارید</p>
+      </div>
+
+      <!-- Post Info Card -->
+      <div class="bg-white rounded-xl shadow-lg p-6 mb-6 border-r-4 border-blue-600">
+        <div class="flex items-start space-x-4 space-x-reverse">
+          <div class="flex-shrink-0">
+            <i class="fas fa-file-alt text-3xl text-blue-600"></i>
+          </div>
+          <div class="flex-1">
+            <h2 class="text-xl font-semibold text-gray-900 mb-2">{{ post.title }}</h2>
+            <p class="text-gray-600 text-sm">{{ post.body|truncatewords:30|striptags }}</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Main Content -->
+      <div class="bg-white rounded-xl shadow-lg overflow-hidden">
+        {% if sent %}
+          <!-- Success Message -->
+          <div class="p-8 text-center">
+            <div class="inline-flex items-center justify-center w-20 h-20 rounded-full bg-green-100 mb-6">
+              <i class="fas fa-check-circle text-4xl text-green-600"></i>
+            </div>
+
+            <h2 class="text-2xl font-bold text-gray-900 mb-3">ایمیل با موفقیت ارسال شد!</h2>
+
+            <p class="text-gray-600 mb-8">مطلب با موفقیت برای گیرنده ارسال شد. از اشتراک‌گذاری شما متشکریم.</p>
+
+            <div class="flex flex-col sm:flex-row gap-3 justify-center">
+              <a href="{{ post.get_absolute_url }}" class="inline-flex items-center justify-center px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-all hover:shadow-lg">
+                <i class="fas fa-arrow-left ml-2"></i>
+                بازگشت به مطلب
+              </a>
+
+              <a href="{% url 'blog:post_list' %}" class="inline-flex items-center justify-center px-6 py-3 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 transition-colors">
+                <i class="fas fa-home ml-2"></i>
+                صفحه اصلی
+              </a>
+            </div>
+          </div>
+        {% else %}
+          <!-- Share Form -->
+          <div class="p-8">
+            <h2 class="text-xl font-bold text-gray-900 mb-6 flex items-center">
+              <i class="fas fa-envelope text-blue-600 ml-2"></i>
+              ارسال از طریق ایمیل
+            </h2>
+
+            <form method="post" class="space-y-6">
+              {% csrf_token %}
+
+              <!-- Form Fields -->
+              <div class="space-y-5">
+                {% for field in form %}
+                  <div>
+                    <label for="{{ field.id_for_label }}" class="block text-sm font-medium text-gray-700 mb-2">
+                      {{ field.label }}
+                      {% if field.field.required %}
+                        <span class="text-red-500">*</span>
+                      {% endif %}
+                    </label>
+
+                    {{ field }}
+
+                    {% if field.errors %}
+                      <p class="mt-2 text-sm text-red-600">
+                        <i class="fas fa-exclamation-circle ml-1"></i>
+                        {{ field.errors.0 }}
+                      </p>
+                    {% endif %}
+
+                    {% if field.help_text %}
+                      <p class="mt-2 text-sm text-gray-500">{{ field.help_text }}</p>
+                    {% endif %}
+                  </div>
+                {% endfor %}
+              </div>
+
+              <!-- Form Actions -->
+              <div class="flex flex-col sm:flex-row gap-3 pt-4">
+                <button type="submit" class="flex-1 inline-flex items-center justify-center px-6 py-3 bg-gradient-to-r from-blue-600 to-purple-600 text-white font-medium rounded-lg hover:from-blue-700 hover:to-purple-700 transition-all duration-300 transform hover:-translate-y-0.5 hover:shadow-lg">
+                  <i class="fas fa-paper-plane ml-2"></i>
+                  ارسال ایمیل
+                </button>
+
+                <a href="{{ post.get_absolute_url }}" class="flex-1 inline-flex items-center justify-center px-6 py-3 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 transition-colors">
+                  <i class="fas fa-times ml-2"></i>
+                  انصراف
+                </a>
+              </div>
+            </form>
+
+            <!-- Additional Share Options -->
+            <div class="mt-8 pt-8 border-t border-gray-200">
+              <h3 class="text-sm font-medium text-gray-700 mb-4">یا از طریق شبکه‌های اجتماعی:</h3>
+
+              <div class="flex flex-wrap gap-3">
+                <button class="flex items-center px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors">
+                  <i class="fab fa-twitter ml-2"></i>
+                  توییتر
+                </button>
+
+                <button class="flex items-center px-4 py-2 bg-blue-700 text-white rounded-lg hover:bg-blue-800 transition-colors">
+                  <i class="fab fa-facebook ml-2"></i>
+                  فیسبوک
+                </button>
+
+                <button class="flex items-center px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors">
+                  <i class="fab fa-linkedin ml-2"></i>
+                  لینکدین
+                </button>
+
+                <button class="flex items-center px-4 py-2 bg-green-500 text-white rounded-lg hover:bg-green-600 transition-colors">
+                  <i class="fab fa-whatsapp ml-2"></i>
+                  واتساپ
+                </button>
+
+                <button class="flex items-center px-4 py-2 bg-pink-500 text-white rounded-lg hover:bg-pink-600 transition-colors">
+                  <i class="fab fa-telegram ml-2"></i>
+                  تلگرام
+                </button>
+              </div>
+            </div>
+          </div>
+        {% endif %}
+      </div>
+    </div>
   </div>
+
+  <style>
+    /* Custom styles for Django form fields */
+    input[type='text'],
+    input[type='email'],
+    textarea {
+      width: 100%;
+      padding: 0.75rem 1rem;
+      border: 2px solid #e5e7eb;
+      border-radius: 0.5rem;
+      font-size: 1rem;
+      transition: all 0.3s ease;
+      background-color: white;
+    }
+    
+    input[type='text']:focus,
+    input[type='email']:focus,
+    textarea:focus {
+      outline: none;
+      border-color: #3b82f6;
+      box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+    }
+    
+    textarea {
+      min-height: 120px;
+      resize: vertical;
+      font-family: inherit;
+    }
+  </style>
 {% endblock %}

@@ -1,15 +1,88 @@
-<div class="pagination">
-  <span class="step-links">
-    {% if page.has_previous %}
-      <a href="?page=1">first</a>
-      <a href="?page={{ page.previous_page_number }}">previous</a>
-    {% endif %}
+{% if page.has_other_pages %}
+  <nav class="flex items-center justify-center" aria-label="Pagination">
+    <div class="flex items-center space-x-2 space-x-reverse">
+      {% if page.has_previous %}
+        <!-- First Page -->
+        <a href="?page=1" class="inline-flex items-center px-4 py-2 bg-white border border-gray-300 rounded-lg text-sm font-medium text-gray-700 hover:bg-blue-600 hover:text-white hover:border-blue-600 transition-all duration-200 hover:shadow-md" title="صفحه اول">
+          <i class="fas fa-angle-double-right"></i>
+          <span class="mr-2 hidden sm:inline">اول</span>
+        </a>
 
-    <span class="current">Page {{ page.number }} of {{ page.paginator.num_pages }}.</span>
+        <!-- Previous Page -->
+        <a href="?page={{ page.previous_page_number }}" class="inline-flex items-center px-4 py-2 bg-white border border-gray-300 rounded-lg text-sm font-medium text-gray-700 hover:bg-blue-600 hover:text-white hover:border-blue-600 transition-all duration-200 hover:shadow-md" title="صفحه قبل">
+          <i class="fas fa-angle-right"></i>
+          <span class="mr-2 hidden sm:inline">قبلی</span>
+        </a>
+      {% else %}
+        <!-- Disabled First -->
+        <span class="inline-flex items-center px-4 py-2 bg-gray-100 border border-gray-200 rounded-lg text-sm font-medium text-gray-400 cursor-not-allowed">
+          <i class="fas fa-angle-double-right"></i>
+          <span class="mr-2 hidden sm:inline">اول</span>
+        </span>
 
-    {% if page.has_next %}
-      <a href="?page={{ page.next_page_number }}">next</a>
-      <a href="?page={{ page.paginator.num_pages }}">last</a>
-    {% endif %}
-  </span>
-</div>
+        <!-- Disabled Previous -->
+        <span class="inline-flex items-center px-4 py-2 bg-gray-100 border border-gray-200 rounded-lg text-sm font-medium text-gray-400 cursor-not-allowed">
+          <i class="fas fa-angle-right"></i>
+          <span class="mr-2 hidden sm:inline">قبلی</span>
+        </span>
+      {% endif %}
+
+      <!-- Page Numbers -->
+      <div class="hidden md:flex items-center space-x-2 space-x-reverse">
+        {% for num in page.paginator.page_range %}
+          {% if page.number == num %}
+            <!-- Current Page -->
+            <span class="inline-flex items-center justify-center w-10 h-10 bg-gradient-to-br from-blue-600 to-purple-600 text-white font-bold rounded-lg shadow-md">{{ num }}</span>
+          {% elif num > page.number|add:'-3' and num < page.number|add:'3' %}
+            <!-- Adjacent Pages -->
+            <a href="?page={{ num }}" class="inline-flex items-center justify-center w-10 h-10 bg-white border border-gray-300 rounded-lg text-sm font-medium text-gray-700 hover:bg-blue-600 hover:text-white hover:border-blue-600 transition-all duration-200">{{ num }}</a>
+          {% endif %}
+        {% endfor %}
+      </div>
+
+      <!-- Current Page Indicator (Mobile) -->
+      <div class="md:hidden">
+        <span class="inline-flex items-center px-4 py-2 bg-gradient-to-br from-blue-600 to-purple-600 text-white font-medium rounded-lg shadow-md">
+          <i class="fas fa-file-alt ml-2"></i>
+          صفحه {{ page.number }} از {{ page.paginator.num_pages }}
+        </span>
+      </div>
+
+      {% if page.has_next %}
+        <!-- Next Page -->
+        <a href="?page={{ page.next_page_number }}" class="inline-flex items-center px-4 py-2 bg-white border border-gray-300 rounded-lg text-sm font-medium text-gray-700 hover:bg-blue-600 hover:text-white hover:border-blue-600 transition-all duration-200 hover:shadow-md" title="صفحه بعد">
+          <span class="ml-2 hidden sm:inline">بعدی</span>
+          <i class="fas fa-angle-left"></i>
+        </a>
+
+        <!-- Last Page -->
+        <a href="?page={{ page.paginator.num_pages }}" class="inline-flex items-center px-4 py-2 bg-white border border-gray-300 rounded-lg text-sm font-medium text-gray-700 hover:bg-blue-600 hover:text-white hover:border-blue-600 transition-all duration-200 hover:shadow-md" title="صفحه آخر">
+          <span class="ml-2 hidden sm:inline">آخر</span>
+          <i class="fas fa-angle-double-left"></i>
+        </a>
+      {% else %}
+        <!-- Disabled Next -->
+        <span class="inline-flex items-center px-4 py-2 bg-gray-100 border border-gray-200 rounded-lg text-sm font-medium text-gray-400 cursor-not-allowed">
+          <span class="ml-2 hidden sm:inline">بعدی</span>
+          <i class="fas fa-angle-left"></i>
+        </span>
+
+        <!-- Disabled Last -->
+        <span class="inline-flex items-center px-4 py-2 bg-gray-100 border border-gray-200 rounded-lg text-sm font-medium text-gray-400 cursor-not-allowed">
+          <span class="ml-2 hidden sm:inline">آخر</span>
+          <i class="fas fa-angle-double-left"></i>
+        </span>
+      {% endif %}
+    </div>
+  </nav>
+
+  <!-- Page Info (Desktop) -->
+  <div class="hidden md:block text-center mt-4">
+    <p class="text-sm text-gray-600">
+      نمایش صفحه <span class="font-semibold text-blue-600">{{ page.number }}</span> از
+      <span class="font-semibold text-blue-600">{{ page.paginator.num_pages }}</span>
+      <span class="mx-2">•</span>
+      مجموع <span class="font-semibold text-blue-600">{{ page.paginator.count }}</span> مطلب
+    </p>
+  </div>
+{% endif %}

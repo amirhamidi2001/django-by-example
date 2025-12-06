@@ -1,0 +1,112 @@
+<div class="bg-gradient-to-br from-blue-50 to-purple-50 rounded-xl p-6 md:p-8">
+  <h3 class="text-xl font-bold text-gray-900 mb-6 flex items-center">
+    <i class="fas fa-pen text-blue-600 ml-2"></i>
+    نظر خود را بنویسید
+  </h3>
+
+  <form action="{% url 'blog:post_comment' post.id %}" method="post" class="space-y-6">
+    {% csrf_token %}
+
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+      <!-- Name Field -->
+      <div>
+        <label for="{{ form.name.id_for_label }}" class="block text-sm font-medium text-gray-700 mb-2">
+          <i class="fas fa-user ml-1 text-blue-600"></i>
+          نام شما *
+        </label>
+        {{ form.name }}
+        {% if form.name.errors %}
+          <p class="mt-2 text-sm text-red-600">
+            <i class="fas fa-exclamation-circle ml-1"></i>
+            {{ form.name.errors.0 }}
+          </p>
+        {% endif %}
+      </div>
+
+      <!-- Email Field -->
+      <div>
+        <label for="{{ form.email.id_for_label }}" class="block text-sm font-medium text-gray-700 mb-2">
+          <i class="fas fa-envelope ml-1 text-blue-600"></i>
+          ایمیل شما *
+        </label>
+        {{ form.email }}
+        {% if form.email.errors %}
+          <p class="mt-2 text-sm text-red-600">
+            <i class="fas fa-exclamation-circle ml-1"></i>
+            {{ form.email.errors.0 }}
+          </p>
+        {% endif %}
+      </div>
+    </div>
+
+    <!-- Body Field -->
+    <div>
+      <label for="{{ form.body.id_for_label }}" class="block text-sm font-medium text-gray-700 mb-2">
+        <i class="fas fa-comment-dots ml-1 text-blue-600"></i>
+        نظر شما *
+      </label>
+      {{ form.body }}
+      {% if form.body.errors %}
+        <p class="mt-2 text-sm text-red-600">
+          <i class="fas fa-exclamation-circle ml-1"></i>
+          {{ form.body.errors.0 }}
+        </p>
+      {% endif %}
+      <p class="mt-2 text-sm text-gray-500">لطفاً نظر خود را با احترام و رعایت اصول اخلاقی بنویسید.</p>
+    </div>
+
+    <!-- Submit Button -->
+    <div class="flex items-center justify-between">
+      <button type="submit" class="inline-flex items-center px-8 py-3 bg-gradient-to-r from-blue-600 to-purple-600 text-white font-medium rounded-lg hover:from-blue-700 hover:to-purple-700 transition-all duration-300 transform hover:-translate-y-0.5 hover:shadow-lg">
+        <i class="fas fa-paper-plane ml-2"></i>
+        ارسال نظر
+      </button>
+
+      <p class="text-sm text-gray-500">
+        <i class="fas fa-info-circle ml-1"></i>
+        تمام فیلدها الزامی هستند
+      </p>
+    </div>
+  </form>
+</div>
+
+
+<style>
+  /* Custom styles for Django form fields */
+  #{{ form.name.id_for_label }},
+  #{{ form.email.id_for_label }} {
+    width: 100%;
+    padding: 0.75rem 1rem;
+    border: 2px solid #e5e7eb;
+    border-radius: 0.5rem;
+    font-size: 1rem;
+    transition: all 0.3s ease;
+    background-color: white;
+  }
+
+  #{{ form.name.id_for_label }}:focus,
+  #{{ form.email.id_for_label }}:focus {
+    outline: none;
+    border-color: #3b82f6;
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+  }
+
+  #{{ form.body.id_for_label }} {
+    width: 100%;
+    padding: 0.75rem 1rem;
+    border: 2px solid #e5e7eb;
+    border-radius: 0.5rem;
+    font-size: 1rem;
+    min-height: 150px;
+    resize: vertical;
+    transition: all 0.3s ease;
+    background-color: white;
+    font-family: inherit;
+  }
+
+  #{{ form.body.id_for_label }}:focus {
+    outline: none;
+    border-color: #3b82f6;
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+  }
+</style>

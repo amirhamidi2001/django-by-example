@@ -1,35 +1,170 @@
 {% extends 'blog/base.html' %}
-{% block title %}
-  {{ post.title }} - My Blog
-{% endblock %}
-{% block content %}
-  <header>
-    <div class="container">
-      <h1><a href="{% url 'blog:post_list' %}">My Blog</a></h1>
-      <p class="tagline">Thoughts, stories and ideas</p>
-    </div>
-  </header>
 
-  <main class="container">
-    <article class="post-detail">
-      <header class="post-header">
-        <h2>{{ post.title }}</h2>
-        <div class="post-meta">
-          <span class="author">By {{ post.author.username }}</span>
-          <span class="date">Published on {{ post.publish|date:'F d, Y' }}</span>
-          {% if post.updated != post.created %}
-            <span class="updated">Updated {{ post.updated|date:'F d, Y' }}</span>
-          {% endif %}
+{% block title %}
+  {{ post.title }} - وبلاگ من
+{% endblock %}
+
+{% block content %}
+  <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+    <!-- Breadcrumb -->
+    <nav class="mb-8 text-sm">
+      <ol class="flex items-center space-x-2 space-x-reverse text-gray-500">
+        <li>
+          <a href="{% url 'blog:post_list' %}" class="hover:text-blue-600 transition-colors"><i class="fas fa-home"></i> خانه</a>
+        </li>
+        <li>
+          <i class="fas fa-chevron-left text-xs"></i>
+        </li>
+        <li class="text-gray-900 font-medium truncate">{{ post.title|truncatewords:5 }}</li>
+      </ol>
+    </nav>
+
+    <!-- Post Article -->
+    <article class="bg-white rounded-xl shadow-lg overflow-hidden">
+      <!-- Featured Image Placeholder -->
+      <div class="h-64 md:h-96 bg-gradient-to-br from-blue-500 via-purple-500 to-pink-500 relative">
+        <div class="absolute inset-0 flex items-center justify-center">
+          <i class="fas fa-image text-white text-8xl opacity-30"></i>
+        </div>
+      </div>
+
+      <!-- Post Header -->
+      <header class="p-6 md:p-10 border-b border-gray-200">
+        <h1 class="text-3xl md:text-4xl lg:text-5xl font-bold text-gray-900 mb-6 leading-tight">{{ post.title }}</h1>
+
+        <!-- Author Info -->
+        <div class="flex flex-wrap items-center gap-6 text-gray-600">
+          <div class="flex items-center space-x-3 space-x-reverse">
+            <div class="w-12 h-12 rounded-full bg-gradient-to-br from-blue-400 to-purple-500 flex items-center justify-center text-white font-bold text-lg">{{ post.author.username|slice:':1'|upper }}</div>
+            <div>
+              <p class="font-semibold text-gray-900">{{ post.author.username }}</p>
+              <p class="text-sm text-gray-500">نویسنده</p>
+            </div>
+          </div>
+
+          <div class="flex items-center text-sm space-x-4 space-x-reverse">
+            <span class="flex items-center">
+              <i class="fas fa-calendar-alt ml-2 text-blue-600"></i>
+              {{ post.publish|date:'d F Y' }}
+            </span>
+
+            {% if post.updated != post.created %}
+              <span class="flex items-center text-gray-500">
+                <i class="fas fa-clock ml-2 text-blue-600"></i>
+                بروزرسانی: {{ post.updated|date:'d F Y' }}
+              </span>
+            {% endif %}
+
+            <span class="flex items-center">
+              <i class="fas fa-eye ml-2 text-blue-600"></i>
+              0 بازدید
+            </span>
+          </div>
         </div>
       </header>
 
-      <div class="post-body">{{ post.body|linebreaks }}</div>
-      <p class="post-footer">
-        <a href="{% url 'blog:post_share' post.id %}" class="back-link">Share this post</a>
-      </p>
-      <footer class="post-footer">
-        <a href="{% url 'blog:post_list' %}" class="back-link">← Back to all posts</a>
-      </footer>
+      <!-- Post Body -->
+      <div class="prose prose-lg max-w-none p-6 md:p-10">
+        <div class="text-gray-700 leading-relaxed text-justify">{{ post.body|linebreaks }}</div>
+      </div>
+
+      <!-- Post Actions -->
+      <div class="px-6 md:px-10 pb-6">
+        <div class="flex flex-wrap gap-3">
+          <a href="{% url 'blog:post_share' post.id %}" class="inline-flex items-center px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-all hover:shadow-lg transform hover:-translate-y-0.5">
+            <i class="fas fa-share-alt ml-2"></i>
+            اشتراک‌گذاری
+          </a>
+
+          <button class="inline-flex items-center px-6 py-3 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 transition-colors">
+            <i class="fas fa-bookmark ml-2"></i>
+            ذخیره
+          </button>
+
+          <button class="inline-flex items-center px-6 py-3 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 transition-colors">
+            <i class="fas fa-print ml-2"></i>
+            چاپ
+          </button>
+        </div>
+      </div>
+
+      <!-- Tags Section (if available) -->
+      <div class="px-6 md:px-10 py-4 bg-gray-50 border-t border-gray-200">
+        <div class="flex flex-wrap items-center gap-2">
+          <span class="text-sm font-medium text-gray-700"><i class="fas fa-tags ml-1"></i> برچسب‌ها:</span>
+          <span class="px-3 py-1 bg-blue-100 text-blue-800 rounded-full text-sm">جنگو</span>
+          <span class="px-3 py-1 bg-purple-100 text-purple-800 rounded-full text-sm">پایتون</span>
+          <span class="px-3 py-1 bg-green-100 text-green-800 rounded-full text-sm">برنامه‌نویسی</span>
+        </div>
+      </div>
     </article>
-  </main>
+
+    <!-- Comments Section -->
+    <div class="mt-12 bg-white rounded-xl shadow-lg p-6 md:p-10">
+      <div class="flex items-center justify-between mb-8">
+        {% with total_comments=comments.count %}
+          <h2 class="text-2xl md:text-3xl font-bold text-gray-900">
+            <i class="fas fa-comments text-blue-600 ml-2"></i>
+            نظرات <span class="text-blue-600">({{ total_comments }})</span>
+          </h2>
+        {% endwith %}
+      </div>
+
+      <!-- Comments List -->
+      {% if comments %}
+        <div class="space-y-6 mb-10">
+          {% for comment in comments %}
+            <div class="flex space-x-4 space-x-reverse p-4 rounded-lg hover:bg-gray-50 transition-colors">
+              <div class="flex-shrink-0">
+                <div class="w-12 h-12 rounded-full bg-gradient-to-br from-green-400 to-blue-500 flex items-center justify-center text-white font-bold">{{ comment.name|slice:':1'|upper }}</div>
+              </div>
+
+              <div class="flex-1">
+                <div class="flex items-center justify-between mb-2">
+                  <h4 class="font-semibold text-gray-900">{{ comment.name }}</h4>
+                  <span class="text-sm text-gray-500">
+                    <i class="fas fa-clock ml-1"></i>
+                    {{ comment.created|date:'d F Y - H:i' }}
+                  </span>
+                </div>
+
+                <p class="text-gray-700 leading-relaxed">{{ comment.body|linebreaks }}</p>
+
+                <div class="mt-3 flex items-center space-x-4 space-x-reverse text-sm">
+                  <button class="text-gray-500 hover:text-blue-600 transition-colors">
+                    <i class="fas fa-thumbs-up ml-1"></i>
+                    پسندیدن
+                  </button>
+                  <button class="text-gray-500 hover:text-blue-600 transition-colors">
+                    <i class="fas fa-reply ml-1"></i>
+                    پاسخ
+                  </button>
+                </div>
+              </div>
+            </div>
+          {% endfor %}
+        </div>
+      {% else %}
+        <div class="text-center py-10 mb-10">
+          <div class="inline-flex items-center justify-center w-20 h-20 rounded-full bg-gray-100 mb-4">
+            <i class="fas fa-comment-slash text-3xl text-gray-400"></i>
+          </div>
+          <p class="text-gray-500 text-lg">هنوز نظری ثبت نشده است. اولین نفر باشید!</p>
+        </div>
+      {% endif %}
+
+      <!-- Comment Form -->
+      <div class="border-t border-gray-200 pt-8">
+        {% include 'blog/post/includes/comment_form.html' %}
+      </div>
+    </div>
+
+    <!-- Back to Posts -->
+    <div class="mt-8 text-center">
+      <a href="{% url 'blog:post_list' %}" class="inline-flex items-center text-gray-600 hover:text-blue-600 font-medium transition-colors group">
+        <i class="fas fa-arrow-right ml-2 transform group-hover:translate-x-1 transition-transform"></i>
+        بازگشت به لیست مطالب
+      </a>
+    </div>
+  </div>
 {% endblock %}

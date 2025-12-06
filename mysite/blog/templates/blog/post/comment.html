@@ -1,0 +1,102 @@
+{% extends 'blog/base.html' %}
+
+{% block title %}
+  افزودن نظر
+{% endblock %}
+
+{% block content %}
+  <div class="min-h-screen flex items-center justify-center px-4 py-12">
+    <div class="max-w-2xl w-full">
+      {% if comment %}
+        <!-- Success State -->
+        <div class="text-center">
+          <!-- Success Icon -->
+          <div class="inline-flex items-center justify-center w-24 h-24 rounded-full bg-green-100 mb-6 animate-fade-in">
+            <i class="fas fa-check-circle text-5xl text-green-600"></i>
+          </div>
+
+          <!-- Success Message -->
+          <h1 class="text-3xl md:text-4xl font-bold text-gray-900 mb-4">نظر شما با موفقیت ثبت شد!</h1>
+
+          <p class="text-lg text-gray-600 mb-8">از اینکه نظر خود را با ما به اشتراک گذاشتید متشکریم. نظر شما پس از بررسی منتشر خواهد شد.</p>
+
+          <!-- Comment Preview Card -->
+          <div class="bg-white rounded-xl shadow-lg p-6 mb-8 text-right border-r-4 border-green-500">
+            <div class="flex items-start space-x-4 space-x-reverse">
+              <div class="flex-shrink-0">
+                <div class="w-12 h-12 rounded-full bg-gradient-to-br from-green-400 to-blue-500 flex items-center justify-center text-white font-bold text-lg">{{ comment.name|slice:':1'|upper }}</div>
+              </div>
+
+              <div class="flex-1">
+                <div class="flex items-center justify-between mb-2">
+                  <h3 class="font-semibold text-gray-900">{{ comment.name }}</h3>
+                  <span class="text-sm text-gray-500">
+                    <i class="fas fa-clock ml-1"></i>
+                    همین الان
+                  </span>
+                </div>
+
+                <p class="text-gray-700 leading-relaxed">{{ comment.body|linebreaks }}</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- Action Buttons -->
+          <div class="flex flex-col sm:flex-row gap-4 justify-center">
+            <a href="{{ post.get_absolute_url }}" class="inline-flex items-center justify-center px-8 py-3 bg-gradient-to-r from-blue-600 to-purple-600 text-white font-medium rounded-lg hover:from-blue-700 hover:to-purple-700 transition-all duration-300 transform hover:-translate-y-0.5 hover:shadow-lg">
+              <i class="fas fa-arrow-left ml-2"></i>
+              بازگشت به مطلب
+            </a>
+
+            <a href="{% url 'blog:post_list' %}" class="inline-flex items-center justify-center px-8 py-3 bg-white text-gray-700 border-2 border-gray-300 font-medium rounded-lg hover:bg-gray-50 hover:border-gray-400 transition-all duration-300">
+              <i class="fas fa-home ml-2"></i>
+              صفحه اصلی
+            </a>
+          </div>
+
+          <!-- Additional Info -->
+          <div class="mt-8 p-4 bg-blue-50 rounded-lg border border-blue-200">
+            <div class="flex items-start space-x-3 space-x-reverse">
+              <i class="fas fa-info-circle text-blue-600 mt-1"></i>
+              <p class="text-sm text-blue-800 text-right">نظرات پس از بررسی و تایید توسط مدیران سایت منتشر می‌شوند. این فرآیند معمولاً کمتر از 24 ساعت طول می‌کشد.</p>
+            </div>
+          </div>
+        </div>
+      {% else %}
+        <!-- Add Comment Form -->
+        <div class="bg-white rounded-xl shadow-lg overflow-hidden">
+          <!-- Header -->
+          <div class="bg-gradient-to-r from-blue-600 to-purple-600 px-8 py-6">
+            <h1 class="text-2xl md:text-3xl font-bold text-white flex items-center">
+              <i class="fas fa-comment-medical ml-3"></i>
+              افزودن نظر جدید
+            </h1>
+            <p class="text-blue-100 mt-2">نظر خود را درباره این مطلب با ما به اشتراک بگذارید</p>
+          </div>
+
+          <!-- Post Info -->
+          <div class="px-8 py-4 bg-gray-50 border-b border-gray-200">
+            <div class="flex items-center space-x-3 space-x-reverse text-sm text-gray-600">
+              <i class="fas fa-file-alt text-blue-600"></i>
+              <span class="font-medium">مطلب:</span>
+              <a href="{{ post.get_absolute_url }}" class="text-blue-600 hover:text-blue-700 font-medium">{{ post.title }}</a>
+            </div>
+          </div>
+
+          <!-- Comment Form -->
+          <div class="p-8">
+            {% include 'blog/post/includes/comment_form.html' %}
+          </div>
+        </div>
+
+        <!-- Back Link -->
+        <div class="mt-6 text-center">
+          <a href="{{ post.get_absolute_url }}" class="inline-flex items-center text-gray-600 hover:text-blue-600 transition-colors group">
+            <i class="fas fa-arrow-right ml-2 transform group-hover:translate-x-1 transition-transform"></i>
+            بازگشت به مطلب
+          </a>
+        </div>
+      {% endif %}
+    </div>
+  </div>
+{% endblock %}
