@@ -9,7 +9,11 @@
   <div class="bg-gradient-to-br from-blue-600 to-purple-600 text-white py-20">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
       <h1 class="text-4xl md:text-5xl lg:text-6xl font-bold mb-4 animate-fade-in">به وبلاگ ما خوش آمدید</h1>
-      <p class="text-xl md:text-2xl text-blue-100 max-w-2xl mx-auto">افکار، داستان‌ها و ایده‌های جالب را با ما کشف کنید</p>
+      <h2 class="text-xl md:text-2xl text-blue-100 max-w-2xl mx-auto">
+        {% if tag %}
+          پست‌های برچسب‌گذاری شده با "{{ tag.name }}"
+        {% endif %}
+      </h2>
     </div>
   </div>
 
@@ -55,7 +59,15 @@
                   {{ post.publish|date:'Y/m/d' }}
                 </span>
               </div>
-
+              <div class="flex items-center text-sm text-gray-500 mb-4 space-x-4 space-x-reverse">
+                <p>
+                  {% for tag in post.tags.all %}
+                    <!-- Create a link to the filtered view -->
+                    <a href="{% url 'blog:post_list_by_tag' tag_slug=tag.slug %}">{{ tag.name }}</a>
+                    {% if not forloop.last %}, {% endif %}
+                  {% endfor %}
+                </p>
+              </div>
               <!-- Excerpt -->
               <p class="text-gray-600 mb-4 line-clamp-3 leading-relaxed">{{ post.body|truncatewords:25|striptags }}</p>
 
@@ -85,7 +97,7 @@
 
       <!-- Pagination -->
       <div class="mt-12">
-        {% include 'pagination.html' with page=page_obj %}
+        {% include 'pagination.html' with page=posts %}
       </div>
     {% else %}
       <!-- No Posts Message -->

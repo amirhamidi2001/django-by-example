@@ -2,6 +2,7 @@ from django.conf import settings
 from django.db import models
 from django.urls import reverse
 from django.utils import timezone
+from taggit.managers import TaggableManager
 
 
 class PublishedManager(models.Manager):
@@ -21,6 +22,7 @@ class Post(models.Model):
         settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name="blog_post"
     )
     body = models.TextField()
+    tags = TaggableManager()
     publish = models.DateTimeField(default=timezone.now)
     created = models.DateTimeField(auto_now_add=True)
     updated = models.DateTimeField(auto_now=True)
@@ -28,7 +30,7 @@ class Post(models.Model):
         max_length=10, choices=Status.choices, default=Status.DRAFT
     )
     objects = models.Manager()
-    Published = PublishedManager()
+    published = PublishedManager()
 
     class Meta:
         ordering = ["-publish"]
@@ -46,7 +48,7 @@ class Post(models.Model):
 
 class Comment(models.Model):
 
-    post = models.ForeignKey(Post, models.CASCADE, related_name="comment")
+    post = models.ForeignKey(Post, models.CASCADE, related_name="comments")
     name = models.CharField(max_length=255)
     email = models.EmailField()
     body = models.TextField()
