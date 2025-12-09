@@ -1,4 +1,5 @@
 {% extends 'blog/base.html' %}
+{% load blog_tags %}
 
 {% block title %}
   وبلاگ من - آخرین مطالب
@@ -69,7 +70,7 @@
                 </p>
               </div>
               <!-- Excerpt -->
-              <p class="text-gray-600 mb-4 line-clamp-3 leading-relaxed">{{ post.body|truncatewords:25|striptags }}</p>
+              <p class="text-gray-600 mb-4 line-clamp-3 leading-relaxed">{{ post.body|markdown|truncatewords:25|striptags }}</p>
 
               <!-- Read More Button -->
               <a href="{{ post.get_absolute_url }}" class="inline-flex items-center text-blue-600 hover:text-blue-700 font-medium group">
