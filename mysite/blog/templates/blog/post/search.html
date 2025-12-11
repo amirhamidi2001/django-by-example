@@ -2,7 +2,7 @@
 {% load blog_tags %}
 
 {% block title %}
-  وبلاگ من - آخرین مطالب
+  جستجو
 {% endblock %}
 
 {% block content %}
@@ -10,11 +10,6 @@
   <div class="bg-gradient-to-br from-blue-600 to-purple-600 text-white py-20">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
       <h1 class="text-4xl md:text-5xl lg:text-6xl font-bold mb-4 animate-fade-in">به وبلاگ ما خوش آمدید</h1>
-      <h2 class="text-xl md:text-2xl text-blue-100 max-w-2xl mx-auto">
-        {% if tag %}
-          پست‌های برچسب‌گذاری شده با "{{ tag.name }}"
-        {% endif %}
-      </h2>
     </div>
   </div>
 
@@ -23,22 +18,22 @@
     <div class="flex items-center justify-between mb-8">
       <h2 class="text-3xl font-bold text-gray-900">
         <i class="fas fa-newspaper text-blue-600 ml-2"></i>
-        آخرین مطالب
+        {{ query }}
       </h2>
 
       <!-- Search & Filter (Optional) -->
       <div class="hidden md:flex items-center space-x-3 space-x-reverse">
-        <form action="{% url 'blog:post_search' %}" method="get">
+        <form action="." method="get">
           <input name="query" id="id_query" type="text" placeholder="جستجو..." class="px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent" />
           <button class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"><i class="fas fa-search"></i></button>
         </form>
       </div>
     </div>
 
-    {% if posts %}
+    {% if query %}
       <!-- Posts Grid -->
       <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-8">
-        {% for post in posts %}
+        {% for post in results %}
           <article class="bg-white rounded-xl shadow-md hover:shadow-xl transition-all duration-300 transform hover:-translate-y-2 overflow-hidden group">
             <!-- Post Image Placeholder -->
             <div class="h-48 bg-gradient-to-br from-blue-400 to-purple-500 relative overflow-hidden">
