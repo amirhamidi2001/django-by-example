@@ -1,0 +1,72 @@
+{% extends 'base.html' %}
+
+{% block title %}
+  Registration Successful - Social Network
+{% endblock %}
+
+{% block extra_css %}
+  <style>
+    .success-container {
+      max-width: 500px;
+      margin: 3rem auto;
+      background: var(--white);
+      padding: 3rem 2.5rem;
+      border-radius: 0.75rem;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+      text-align: center;
+    }
+    
+    .success-icon {
+      width: 80px;
+      height: 80px;
+      margin: 0 auto 1.5rem;
+      background-color: #d1fae5;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 3rem;
+    }
+    
+    .success-container h1 {
+      font-size: 2rem;
+      color: var(--text-primary);
+      margin-bottom: 1rem;
+    }
+    
+    .success-container p {
+      color: var(--text-secondary);
+      font-size: 1.1rem;
+      line-height: 1.6;
+      margin-bottom: 2rem;
+    }
+    
+    .btn {
+      display: inline-block;
+      padding: 0.875rem 2rem;
+      background-color: var(--primary-color);
+      color: var(--white);
+      text-decoration: none;
+      border-radius: 0.5rem;
+      font-weight: 600;
+      transition: background-color 0.2s, transform 0.1s;
+    }
+    
+    .btn:hover {
+      background-color: var(--primary-hover);
+    }
+    
+    .btn:active {
+      transform: scale(0.98);
+    }
+  </style>
+{% endblock %}
+
+{% block content %}
+  <div class="success-container">
+    <div class="success-icon">✓</div>
+    <h1>Welcome Aboard!</h1>
+    <p>Your account has been created successfully. You can now log in and start connecting with others.</p>
+    <a href="{% url 'login' %}" class="btn">Go to Login</a>
+  </div>
+{% endblock %}

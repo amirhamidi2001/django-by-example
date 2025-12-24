@@ -1,0 +1,294 @@
+{% extends 'base.html' %}
+
+{% block title %}
+  Sign Up - Social Network
+{% endblock %}
+
+{% block extra_css %}
+  <style>
+    .auth-container {
+      max-width: 450px;
+      margin: 2rem auto;
+      background: var(--white);
+      padding: 2.5rem;
+      border-radius: 0.75rem;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    }
+    
+    .auth-header {
+      text-align: center;
+      margin-bottom: 2rem;
+    }
+    
+    .auth-header h1 {
+      font-size: 2rem;
+      color: var(--text-primary);
+      margin-bottom: 0.5rem;
+    }
+    
+    .auth-header p {
+      color: var(--text-secondary);
+      font-size: 0.95rem;
+    }
+    
+    .form-group {
+      margin-bottom: 1.5rem;
+    }
+    
+    .form-label {
+      display: block;
+      margin-bottom: 0.5rem;
+      font-weight: 500;
+      color: var(--text-primary);
+    }
+    
+    .form-input {
+      width: 100%;
+      padding: 0.75rem 1rem;
+      border: 1px solid var(--border-color);
+      border-radius: 0.5rem;
+      font-size: 1rem;
+      transition: border-color 0.2s, box-shadow 0.2s;
+    }
+    
+    .form-input:focus {
+      outline: none;
+      border-color: var(--primary-color);
+      box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.1);
+    }
+    
+    .form-error {
+      color: var(--danger-color);
+      font-size: 0.875rem;
+      margin-top: 0.5rem;
+      display: block;
+    }
+    
+    .form-input.error {
+      border-color: var(--danger-color);
+    }
+    
+    .form-help {
+      color: var(--text-secondary);
+      font-size: 0.875rem;
+      margin-top: 0.5rem;
+    }
+    
+    .btn {
+      width: 100%;
+      padding: 0.875rem;
+      border: none;
+      border-radius: 0.5rem;
+      font-size: 1rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background-color 0.2s, transform 0.1s;
+    }
+    
+    .btn:active {
+      transform: scale(0.98);
+    }
+    
+    .btn-primary {
+      background-color: var(--primary-color);
+      color: var(--white);
+    }
+    
+    .btn-primary:hover {
+      background-color: var(--primary-hover);
+    }
+    
+    .btn-primary:disabled {
+      background-color: #9ca3af;
+      cursor: not-allowed;
+      transform: none;
+    }
+    
+    .form-footer {
+      margin-top: 1.5rem;
+      text-align: center;
+    }
+    
+    .form-footer a {
+      color: var(--primary-color);
+      text-decoration: none;
+      font-weight: 500;
+    }
+    
+    .form-footer a:hover {
+      text-decoration: underline;
+    }
+    
+    .divider {
+      margin: 1.5rem 0;
+      text-align: center;
+      color: var(--text-secondary);
+      font-size: 0.875rem;
+    }
+    
+    .password-strength {
+      height: 4px;
+      background-color: var(--border-color);
+      border-radius: 2px;
+      margin-top: 0.5rem;
+      overflow: hidden;
+    }
+    
+    .password-strength-bar {
+      height: 100%;
+      width: 0%;
+      transition: width 0.3s, background-color 0.3s;
+    }
+    
+    .password-strength-bar.weak {
+      width: 33%;
+      background-color: var(--danger-color);
+    }
+    
+    .password-strength-bar.medium {
+      width: 66%;
+      background-color: #f59e0b;
+    }
+    
+    .password-strength-bar.strong {
+      width: 100%;
+      background-color: var(--success-color);
+    }
+  </style>
+{% endblock %}
+
+{% block content %}
+  <div class="auth-container">
+    <div class="auth-header">
+      <h1>Create Account</h1>
+      <p>Join our community today</p>
+    </div>
+
+    <form method="post" id="registerForm" novalidate>
+      {% csrf_token %}
+
+      <div class="form-group">
+        <label for="id_username" class="form-label">Username</label>
+        <input type="text" name="username" id="id_username" class="form-input" required autocomplete="username" value="{{ form.username.value|default:'' }}" />
+        {% if form.username.errors %}
+          <span class="form-error">{{ form.username.errors.0 }}</span>
+        {% else %}
+          <span class="form-help">Choose a unique username (letters, numbers, @/./+/-/_ only)</span>
+        {% endif %}
+      </div>
+
+      <div class="form-group">
+        <label for="id_first_name" class="form-label">First Name</label>
+        <input type="text" name="first_name" id="id_first_name" class="form-input" value="{{ form.first_name.value|default:'' }}" />
+        {% if form.first_name.errors %}
+          <span class="form-error">{{ form.first_name.errors.0 }}</span>
+        {% endif %}
+      </div>
+
+      <div class="form-group">
+        <label for="id_email" class="form-label">Email</label>
+        <input type="email" name="email" id="id_email" class="form-input" required autocomplete="email" value="{{ form.email.value|default:'' }}" />
+        {% if form.email.errors %}
+          <span class="form-error">{{ form.email.errors.0 }}</span>
+        {% endif %}
+      </div>
+
+      <div class="form-group">
+        <label for="id_password" class="form-label">Password</label>
+        <input type="password" name="password" id="id_password" class="form-input" required autocomplete="new-password" />
+        <div class="password-strength">
+          <div class="password-strength-bar" id="strengthBar"></div>
+        </div>
+        {% if form.password.errors %}
+          <span class="form-error">{{ form.password.errors.0 }}</span>
+        {% else %}
+          <span class="form-help">Must be at least 8 characters</span>
+        {% endif %}
+      </div>
+
+      <div class="form-group">
+        <label for="id_password2" class="form-label">Confirm Password</label>
+        <input type="password" name="password2" id="id_password2" class="form-input" required autocomplete="new-password" />
+        {% if form.password2.errors %}
+          <span class="form-error">{{ form.password2.errors.0 }}</span>
+        {% endif %}
+      </div>
+
+      {% if form.non_field_errors %}
+        <div class="form-error">{{ form.non_field_errors.0 }}</div>
+      {% endif %}
+
+      <button type="submit" class="btn btn-primary">Create Account</button>
+
+      <div class="divider">Already have an account?</div>
+
+      <div class="form-footer">
+        <a href="{% url 'login' %}">Sign in instead</a>
+      </div>
+    </form>
+  </div>
+{% endblock %}
+
+{% block extra_js %}
+  <script>
+    const passwordInput = document.getElementById('id_password')
+    const strengthBar = document.getElementById('strengthBar')
+    
+    passwordInput.addEventListener('input', function () {
+      const password = this.value
+      let strength = 0
+    
+      if (password.length >= 8) strength++
+      if (/[a-z]/.test(password) && /[A-Z]/.test(password)) strength++
+      if (/\d/.test(password)) strength++
+      if (/[^a-zA-Z\d]/.test(password)) strength++
+    
+      strengthBar.className = 'password-strength-bar'
+    
+      if (strength <= 1) {
+        strengthBar.classList.add('weak')
+      } else if (strength <= 3) {
+        strengthBar.classList.add('medium')
+      } else {
+        strengthBar.classList.add('strong')
+      }
+    })
+    
+    document.getElementById('registerForm').addEventListener('submit', function (e) {
+      const username = document.getElementById('id_username')
+      const email = document.getElementById('id_email')
+      const password = document.getElementById('id_password')
+      const password2 = document.getElementById('id_password2')
+      let isValid = true
+    
+      // Remove previous error states
+      ;[username, email, password, password2].forEach((input) => {
+        input.classList.remove('error')
+      })
+    
+      if (!username.value.trim()) {
+        username.classList.add('error')
+        isValid = false
+      }
+    
+      if (!email.value.trim() || !email.validity.valid) {
+        email.classList.add('error')
+        isValid = false
+      }
+    
+      if (password.value.length < 8) {
+        password.classList.add('error')
+        isValid = false
+      }
+    
+      if (password.value !== password2.value) {
+        password2.classList.add('error')
+        isValid = false
+      }
+    
+      if (!isValid) {
+        e.preventDefault()
+      }
+    })
+  </script>
+{% endblock %}
