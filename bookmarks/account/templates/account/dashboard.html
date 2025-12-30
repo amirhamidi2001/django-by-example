@@ -191,7 +191,7 @@
       <div class="card-icon">👤</div>
       <h3 class="card-title">Profile</h3>
       <p class="card-description">View and update your personal information and account settings</p>
-      <a href="#" class="card-link">Edit Profile →</a>
+      <a href="{% url 'edit' %}" class="card-link">Edit Profile →</a>
     </div>
 
     <div class="dashboard-card">
@@ -220,7 +220,7 @@
             <p>Keep your information current</p>
           </div>
         </div>
-        <a href="#" class="action-btn">Update</a>
+        <a href="{% url 'edit' %}" class="action-btn">Update</a>
       </div>
 
       <div class="action-item">
@@ -242,7 +242,10 @@
             <p>Log out of your account</p>
           </div>
         </div>
-        <a href="{% url 'logout' %}" class="action-btn">Logout</a>
+        <form action="{% url 'logout' %}" method="post">
+          {% csrf_token %}
+          <button href="{% url 'logout' %}" class="action-btn">Logout</button>
+        </form>
       </div>
     </div>
   </div>

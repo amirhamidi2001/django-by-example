@@ -1,0 +1,250 @@
+{% extends 'base.html' %}
+
+{% block title %}
+  Edit Profile - Social Network
+{% endblock %}
+
+{% block extra_css %}
+  <style>
+    .profile-container {
+      max-width: 800px;
+      margin: 2rem auto;
+    }
+    
+    .profile-header {
+      background: var(--white);
+      padding: 2rem;
+      border-radius: 0.75rem;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+      margin-bottom: 2rem;
+    }
+    
+    .profile-header h1 {
+      font-size: 2rem;
+      color: var(--text-primary);
+      margin-bottom: 0.5rem;
+    }
+    
+    .profile-header p {
+      color: var(--text-secondary);
+    }
+    
+    .profile-form {
+      background: var(--white);
+      padding: 2.5rem;
+      border-radius: 0.75rem;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    }
+    
+    .form-section {
+      margin-bottom: 2rem;
+    }
+    
+    .form-section:last-child {
+      margin-bottom: 0;
+    }
+    
+    .section-title {
+      font-size: 1.25rem;
+      font-weight: 600;
+      color: var(--text-primary);
+      margin-bottom: 1.5rem;
+      padding-bottom: 0.75rem;
+      border-bottom: 2px solid var(--border-color);
+    }
+    
+    .form-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1.5rem;
+      margin-bottom: 1.5rem;
+    }
+    
+    .form-group {
+      margin-bottom: 1.5rem;
+    }
+    
+    .form-label {
+      display: block;
+      margin-bottom: 0.5rem;
+      font-weight: 500;
+      color: var(--text-primary);
+    }
+    
+    .form-input,
+    .form-textarea {
+      width: 100%;
+      padding: 0.75rem 1rem;
+      border: 1px solid var(--border-color);
+      border-radius: 0.5rem;
+      font-size: 1rem;
+      font-family: inherit;
+      transition: border-color 0.2s, box-shadow 0.2s;
+    }
+    
+    .form-textarea {
+      resize: vertical;
+      min-height: 100px;
+    }
+    
+    .form-input:focus,
+    .form-textarea:focus {
+      outline: none;
+      border-color: var(--primary-color);
+      box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.1);
+    }
+    
+    .form-error {
+      color: var(--danger-color);
+      font-size: 0.875rem;
+      margin-top: 0.5rem;
+    }
+    
+    .form-help {
+      color: var(--text-secondary);
+      font-size: 0.875rem;
+      margin-top: 0.5rem;
+    }
+    
+    .form-actions {
+      display: flex;
+      gap: 1rem;
+      justify-content: flex-end;
+      padding-top: 1.5rem;
+      border-top: 1px solid var(--border-color);
+    }
+    
+    .btn {
+      padding: 0.75rem 1.5rem;
+      border: none;
+      border-radius: 0.5rem;
+      font-size: 1rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background-color 0.2s, transform 0.1s;
+      text-decoration: none;
+      display: inline-block;
+    }
+    
+    .btn:active {
+      transform: scale(0.98);
+    }
+    
+    .btn-primary {
+      background-color: var(--primary-color);
+      color: var(--white);
+    }
+    
+    .btn-primary:hover {
+      background-color: var(--primary-hover);
+    }
+    
+    .btn-secondary {
+      background-color: var(--bg-light);
+      color: var(--text-primary);
+      border: 1px solid var(--border-color);
+    }
+    
+    .btn-secondary:hover {
+      background-color: #f3f4f6;
+    }
+    
+    @media (max-width: 768px) {
+      .form-row {
+        grid-template-columns: 1fr;
+        gap: 1rem;
+      }
+    
+      .form-actions {
+        flex-direction: column;
+      }
+    
+      .btn {
+        width: 100%;
+      }
+    }
+  </style>
+{% endblock %}
+
+{% block content %}
+  <div class="profile-container">
+    <div class="profile-header">
+      <h1>Edit Your Profile</h1>
+      <p>Update your personal information and preferences</p>
+    </div>
+
+    <form method="post" enctype="multipart/form-data" class="profile-form" id="editForm">
+      {% csrf_token %}
+
+      <div class="form-section">
+        <h2 class="section-title">Personal Information</h2>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label for="id_first_name" class="form-label">First Name</label>
+            <input type="text" name="first_name" id="id_first_name" class="form-input" value="{{ user.first_name }}" />
+            {% if user_form.first_name.errors %}
+              <span class="form-error">{{ user_form.first_name.errors.0 }}</span>
+            {% endif %}
+          </div>
+
+          <div class="form-group">
+            <label for="id_last_name" class="form-label">Last Name</label>
+            <input type="text" name="last_name" id="id_last_name" class="form-input" value="{{ user.last_name }}" />
+            {% if user_form.last_name.errors %}
+              <span class="form-error">{{ user_form.last_name.errors.0 }}</span>
+            {% endif %}
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="id_email" class="form-label">Email</label>
+          <input type="email" name="email" id="id_email" class="form-input" value="{{ user.email }}" />
+          {% if user_form.email.errors %}
+            <span class="form-error">{{ user_form.email.errors.0 }}</span>
+          {% endif %}
+        </div>
+      </div>
+
+      <div class="form-section">
+        <h2 class="section-title">Profile Details</h2>
+
+        <div class="form-group">
+          <label for="id_date_of_birth" class="form-label">Date of Birth</label>
+          <input type="date" name="date_of_birth" id="id_date_of_birth" class="form-input" value="{{ profile_form.date_of_birth.value|date:'Y-m-d'|default:'' }}" />
+          {% if profile_form.date_of_birth.errors %}
+            <span class="form-error">{{ profile_form.date_of_birth.errors.0 }}</span>
+          {% endif %}
+        </div>
+
+        <div class="form-group">
+          <label for="id_photo" class="form-label">Profile Photo</label>
+          <input type="file" name="photo" id="id_photo" class="form-input" accept="image/*" />
+          <span class="form-help">Recommended: Square image, at least 200x200 pixels</span>
+          {% if profile_form.photo.errors %}
+            <span class="form-error">{{ profile_form.photo.errors.0 }}</span>
+          {% endif %}
+        </div>
+      </div>
+
+      <div class="form-actions">
+        <a href="{% url 'dashboard' %}" class="btn btn-secondary">Cancel</a>
+        <button type="submit" class="btn btn-primary">Save Changes</button>
+      </div>
+    </form>
+  </div>
+{% endblock %}
+
+{% block extra_js %}
+  <script>
+    document.getElementById('editForm').addEventListener('submit', function (e) {
+      const email = document.getElementById('id_email')
+    
+      if (email.value && !email.validity.valid) {
+        e.preventDefault()
+        email.focus()
+        alert('Please enter a valid email address')
+      }
+    })
+  </script>
+{% endblock %}

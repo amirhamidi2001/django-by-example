@@ -205,10 +205,10 @@
               <a href="{% url 'dashboard' %}">Dashboard</a>
             </li>
             <li>
-              <a href="#">Profile</a>
+              <a href="{% url 'edit' %}">Profile</a>
             </li>
             <li>
-              <a href="#">Change Password</a>
+              <a href="{% url 'password_change' %}">Change Password</a>
             </li>
           {% endif %}
           {% if request.user.is_authenticated %}
