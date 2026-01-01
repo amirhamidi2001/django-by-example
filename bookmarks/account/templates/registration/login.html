@@ -142,6 +142,22 @@
       <div class="form-footer">
         <a href="{% url 'register' %}">Create an account</a>
       </div>
+
+      <div class="social-login">
+        <div class="row">
+          <div class="col-lg-8 mx-auto">
+            <div class="divider">
+              <span>Sign in with Google</span>
+            </div>
+            <div class="social-buttons">
+              <a href="{% url 'social:begin' 'google-oauth2' %}" class="btn btn-social">
+                <span>Google</span>
+                <i class="bi bi-google"></i>
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
     </form>
   </div>
 {% endblock %}

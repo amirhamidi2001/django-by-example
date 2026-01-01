@@ -1,5 +1,5 @@
 from django import forms
-from django.contrib.auth import get_user_model
+from django.contrib.auth.models import User
 from .models import Profile
 
 
@@ -15,7 +15,7 @@ class UserRegistrationForm(forms.ModelForm):
     password2 = forms.CharField(label="Repeat password", widget=forms.PasswordInput)
 
     class Meta:
-        model = get_user_model()
+        model = User
         fields = ["username", "first_name", "email"]
 
     def clean_password2(self):
@@ -24,12 +24,27 @@ class UserRegistrationForm(forms.ModelForm):
             raise forms.ValidationError("Passwords don't match.")
         return cd["password2"]
 
+    def clean_email(self):
+        email = self.cleaned_data.get("email")
+        if User.objects.filter(email__iexact=email).exists():
+            raise forms.ValidationError("This email address is already in use.")
+        return email
+
 
 class UserEditForm(forms.ModelForm):
 
     class Meta:
-        model = get_user_model()
+        model = User
         fields = ["first_name", "last_name", "email"]
+
+    def clean_email(self):
+        data = self.cleaned_data.get("email")
+        qs = User.objects.exclude(id=self.instance.id).filter(email__iexact=data)
+        if qs.exists:
+            raise forms.ValidationError(
+                "This email address is already in use by another account."
+            )
+        return data
 
 
 class ProfileEditForm(forms.ModelForm):
